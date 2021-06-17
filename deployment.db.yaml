@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: wp-db
+  labels:
+    app: wp-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wp-db
+  template:
+    metadata:
+      labels:
+        app: wp-db
+    spec:
+      containers:
+      - name: wp-db
+        image: mysql:5.7
+        ports:
+        - containerPort: 3306
+        env:
+            - name: DATABASE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: BLOG_DB_NAME
+            - name: DATABASE_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: BLOG_DB_USERNAME
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: BLOG_DB_PASSWORD
+            - name: DATABASE_RANDOM_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: BLOG_RANDOM_ROOT_PASSWORD
